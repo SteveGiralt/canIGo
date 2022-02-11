@@ -10,10 +10,13 @@
     <ul>
       <% for(let bathroom of bathrooms) { %>
       <li>
-        <%= bathroom.title %> - <%= bathroom.location %> (<%= bathroom.occupancy
-        %>)
+        <a href="/bathrooms/<%= bathroom._id %> ">
+          <%= bathroom.title %> - <%= bathroom.location %> (<%=
+          bathroom.occupancy %>)</a
+        >
       </li>
       <% } %>
     </ul>
   </body>
+  <footer><a href="/bathrooms/new">Add A New Bathroom</a></footer>
 </html>

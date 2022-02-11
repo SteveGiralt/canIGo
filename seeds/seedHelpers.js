@@ -10,6 +10,7 @@ module.exports.descriptors = [
   "Friendly",
   "Stinky",
   "Tidy",
+  "Funky",
 ];
 
 module.exports.places = [
@@ -21,6 +22,7 @@ module.exports.places = [
   "Potty",
   "Bathroom",
   "Water Closet",
+  "Outhouse",
 ];
 
 module.exports.occupancy = ["Single", "Multi", "Family"];
