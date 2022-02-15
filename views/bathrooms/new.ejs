@@ -1,41 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add New Bathroom</title>
-  </head>
-  <body>
-    <h1>Add A New Bathroom</h1>
-    <form method="POST" action="/bathrooms">
-      <div>
-        <label for="title">Title:</label>
-        <input type="text" name="title" placeholder="Bathroom title" />
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+  <h1 class="text-center">New Bathroom</h1>
+  <div class="col-6 offset-3">
+    <form method="POST" action="/bathrooms" novalidate class="validatedForm">
+      <div class="mb-3">
+        <label class="form-label" for="title">Title:</label>
+        <input
+          class="form-control"
+          type="text"
+          name="title"
+          placeholder="Bathroom title"
+          required
+        />
+        <div class="valid-feedback">Looks Good!</div>
       </div>
-      <div>
-        <label for="location">Location</label>
-        <input type="text" name="location" placeholder="City, State" />
+      <div class="mb-3">
+        <label class="form-label" for="location">Location</label>
+        <input
+          class="form-control"
+          type="text"
+          name="location"
+          placeholder="City, State"
+          required
+        />
+        <div class="valid-feedback">Looks Good!</div>
       </div>
-      <div>
-        <label for="occupancy">Occupancy Type</label>
-        <select name="occupancy">
+      <div class="mb-3">
+        <label class="form-label" for="occupancy">Occupancy Type</label>
+        <select class="form-control" name="occupancy" required>
+          <option value=""></option>
           <% for (occupancy of occupancies) { %>
           <option value="<%= occupancy %>"><%= occupancy %></option>
           <% } %>
         </select>
+        <div class="valid-feedback">Looks Good!</div>
       </div>
-      <div>
-        <label for="description">Description</label>
+      <div class="mb-3">
+        <label class="form-label" for="description">Description</label>
         <textarea
+          class="form-control"
           name="description"
           id=""
           cols="30"
           rows="3"
           placeholder="Describe the condition of this bathroom"
+          required
         ></textarea>
+        <div class="valid-feedback">Looks Good!</div>
       </div>
-      <button>Add A Bathroom!</button>
+      <div class="mb-3">
+        <label class="form-label" for="image">Image URL</label>
+        <input class="form-control" name="image" required />
+        <div class="valid-feedback">Looks Good!</div>
+      </div>
+      <div class="mb-3">
+        <button class="btn btn-success">Add A Bathroom!</button>
+      </div>
     </form>
-  </body>
-</html>
+  </div>
+</div>

@@ -1,22 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>All Bathrooms</title>
-  </head>
-  <body>
-    <ul>
-      <% for(let bathroom of bathrooms) { %>
-      <li>
-        <a href="/bathrooms/<%= bathroom._id %> ">
-          <%= bathroom.title %> - <%= bathroom.location %> (<%=
-          bathroom.occupancy %>)</a
+<% layout('layouts/boilerplate') %>
+<h1 class="text-center">All Bathrooms</h1>
+
+<% for(let bathroom of bathrooms) { %>
+<div class="card mb-3">
+  <div class="row">
+    <div class="col-md-r">
+      <img
+        src="<%= (bathroom.image ? bathroom.image : '/images/no_toilet_img.jpg') %>"
+        alt=""
+        class="img-thumbnail img-fluid card-img-top"
+      />
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">
+          <%= bathroom.title %>
+          <span class="badge bg-secondary"><%= bathroom.occupancy %></span>
+        </h5>
+        <p class="card-text"><%= bathroom.description %></p>
+        <p class="card-text text-muted"><%= bathroom.location %></p>
+        <a class="btn btn-primary" href="/bathrooms/<%= bathroom._id %> "
+          >View</a
         >
-      </li>
-      <% } %>
-    </ul>
-  </body>
-  <footer><a href="/bathrooms/new">Add A New Bathroom</a></footer>
-</html>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

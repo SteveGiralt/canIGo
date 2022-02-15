@@ -6,6 +6,7 @@ const BathroomSchema = new Schema({
   occupancy: String,
   description: String,
   location: String,
+  image: String,
 });
 
 module.exports = mongoose.model("Bathroom", BathroomSchema);

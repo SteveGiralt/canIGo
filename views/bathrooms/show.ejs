@@ -1,22 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= bathroom.title %></title>
-  </head>
-  <body>
-    <h1><%= bathroom.title %></h1>
-    <ul>
-      <li>Location: <%= bathroom.location %></li>
-      <li>Occupancy: <%= bathroom.occupancy %></li>
-    </ul>
-    <% if (bathroom.description) { %> <%= bathroom.description %> <% } %>
-  </body>
-  <a href="/bathrooms/<%= bathroom._id %>/edit">Edit</a>
-  <form method="POST" action="/bathrooms/<%= bathroom._id %>?_method=DELETE">
-    <button>Delete</button>
-  </form>
-  <footer><a href="/bathrooms">All Bathrooms</a></footer>
-</html>
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+  <div class="col-6 offset-3">
+    <div class="card mb-5" style="width: 18rem">
+      <img
+        src="<%= (bathroom.image ? bathroom.image : '/images/no_toilet_img.jpg') %>"
+        class="card-img-top"
+        alt="Image of Bathroom"
+      />
+      <div class="card-body">
+        <h5 class="card-title"><%= bathroom.title %></h5>
+        <p class="card-text">
+          <% if (bathroom.description) { %> <%= bathroom.description %> <% } %>
+        </p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item text-muted"><%= bathroom.location %></li>
+        <li class="list-group-item text-muted"><%= bathroom.occupancy %></li>
+      </ul>
+      <div class="card-body">
+        <form
+          method="POST"
+          action="/bathrooms/<%= bathroom._id %>?_method=DELETE"
+        >
+          <a
+            class="btn btn-secondary"
+            href="/bathrooms/<%= bathroom._id %>/edit"
+            >Edit</a
+          >
+          <button class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
