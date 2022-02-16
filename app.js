@@ -2,10 +2,11 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
-const methodOverride = require("method-override");
-const Bathroom = require("./models/bathroom");
+const { bathroomSchema } = require("./schemas.js");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
+const methodOverride = require("method-override");
+const Bathroom = require("./models/bathroom");
 
 const occupancies = ["Single", "Multi", "Family"];
 
@@ -30,21 +31,19 @@ app.use(methodOverride("_method"));
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 
+const validateBathroom = (req, res, next) => {
+  const { error } = bathroomSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
 app.get("/", (req, res) => {
   res.render("home");
 });
-
-app.post(
-  "/bathrooms",
-  catchAsync(async (req, res, next) => {
-    if (!req.body.bathroom)
-      throw new ExpressError("Invalid Bathroom Data", 400);
-    const bathroom = new Bathroom(req.body);
-    await bathroom.save();
-    res.redirect(`/bathrooms/${bathroom._id}`);
-  })
-);
-
 app.get(
   "/bathrooms",
   catchAsync(async (req, res) => {
@@ -56,6 +55,17 @@ app.get(
 app.get("/bathrooms/new", (req, res) => {
   res.render("bathrooms/new", { occupancies });
 });
+
+app.post(
+  "/bathrooms",
+  validateBathroom,
+  catchAsync(async (req, res, next) => {
+    // if (!req.body.bathroom) throw new ExpressError('Invalid Bathroom Data', 400);
+    const bathroom = new Bathroom(req.body.bathroom);
+    await bathroom.save();
+    res.redirect(`/bathrooms/${bathroom._id}`);
+  })
+);
 
 app.get(
   "/bathrooms/:id",
@@ -75,9 +85,12 @@ app.get(
 
 app.put(
   "/bathrooms/:id",
+  validateBathroom,
   catchAsync(async (req, res) => {
     const { id } = req.params;
-    const bathroom = await Bathroom.findByIdAndUpdate(id, { ...req.body });
+    const bathroom = await Bathroom.findByIdAndUpdate(id, {
+      ...req.body.bathroom,
+    });
     res.redirect(`/bathrooms/${bathroom._id}`);
   })
 );
@@ -86,21 +99,21 @@ app.delete(
   "/bathrooms/:id",
   catchAsync(async (req, res) => {
     const { id } = req.params;
-    const bathroom = await Bathroom.findByIdAndDelete(id);
+    await Bathroom.findByIdAndDelete(id);
     res.redirect("/bathrooms");
   })
 );
 
 app.all("*", (req, res, next) => {
-  next(new ExpressError("Page Not Found... bummer", 404));
+  next(new ExpressError("Page Not Found", 404));
 });
 
 app.use((err, req, res, next) => {
   const { statusCode = 500 } = err;
-  if (!err.message) err.message = "That's an error...";
+  if (!err.message) err.message = "Oh No, Something Went Wrong!";
   res.status(statusCode).render("error", { err });
 });
 
 app.listen(3000, () => {
-  console.log("Listening on port 3000....");
+  console.log("Serving on port 3000");
 });
