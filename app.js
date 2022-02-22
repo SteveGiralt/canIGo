@@ -2,12 +2,12 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
-const { bathroomSchema } = require("./schemas.js");
+const { bathroomSchema, reviewSchema } = require("./schemas.js");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const methodOverride = require("method-override");
 const Bathroom = require("./models/bathroom");
-
+const Review = require("./models/review");
 const occupancies = ["Single", "Multi", "Family"];
 
 mongoose
@@ -33,6 +33,16 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 
 const validateBathroom = (req, res, next) => {
   const { error } = bathroomSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+const validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new ExpressError(msg, 400);
@@ -70,7 +80,7 @@ app.post(
 app.get(
   "/bathrooms/:id",
   catchAsync(async (req, res) => {
-    const bathroom = await Bathroom.findById(req.params.id);
+    const bathroom = await Bathroom.findById(req.params.id).populate("reviews");
     res.render("bathrooms/show", { bathroom });
   })
 );
@@ -101,6 +111,29 @@ app.delete(
     const { id } = req.params;
     await Bathroom.findByIdAndDelete(id);
     res.redirect("/bathrooms");
+  })
+);
+
+app.post(
+  "/bathrooms/:id/reviews",
+  validateReview,
+  catchAsync(async (req, res) => {
+    const bathroom = await Bathroom.findById(req.params.id);
+    const review = new Review(req.body.review);
+    bathroom.reviews.push(review);
+    await review.save();
+    await bathroom.save();
+    res.redirect(`/bathrooms/${bathroom._id}`);
+  })
+);
+
+app.delete(
+  "/bathrooms/:id/reviews/:reviewId",
+  catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Bathroom.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/bathrooms/${id}`);
   })
 );
 

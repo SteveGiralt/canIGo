@@ -4,11 +4,11 @@
 <% for(let bathroom of bathrooms) { %>
 <div class="card mb-3">
   <div class="row">
-    <div class="col-md-r">
+    <div class="col-md-4">
       <img
         src="<%= (bathroom.image ? bathroom.image : '/images/no_toilet_img.jpg') %>"
         alt=""
-        class="img-thumbnail img-fluid card-img-top"
+        class="img-fluid"
       />
     </div>
     <div class="col-md-8">
