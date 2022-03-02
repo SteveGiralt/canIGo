@@ -19,7 +19,8 @@ const seedDB = async () => {
   await Bathroom.deleteMany({});
   for (let i = 0; i < 50; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
-    const camp = new Bathroom({
+    const bath = new Bathroom({
+      author: "621ee9394e1881a2f377465b",
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       occupancy: `${sample(occupancy)}`,
@@ -27,7 +28,7 @@ const seedDB = async () => {
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe est aspernatur placeat itaque optio consectetur unde. Tempore repellendus a, iusto earum placeat aperiam! Facere quod voluptatum ea? Libero, sunt debitis!",
     });
-    await camp.save();
+    await bath.save();
   }
 };
 

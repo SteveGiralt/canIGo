@@ -10,15 +10,22 @@
         style="width: 80%; height: 75%; margin: auto"
       />
       <div class="card-body">
-        <h5 class="card-title"><%= bathroom.title %></h5>
+        <h5 class="card-title">
+          <%= bathroom.title %>
+          <span class="badge bg-secondary"><%= bathroom.occupancy %></span>
+        </h5>
         <p class="card-text">
           <% if (bathroom.description) { %> <%= bathroom.description %> <% } %>
         </p>
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item text-muted"><%= bathroom.location %></li>
-        <li class="list-group-item text-muted"><%= bathroom.occupancy %></li>
+        <li class="list-group-item text-muted">
+          Added by: <%= bathroom.author.username %>
+        </li>
       </ul>
+      <% if (currentUser && bathroom.author.equals(currentUser._id)) { %>
+
       <div class="card-body">
         <form
           method="POST"
@@ -32,10 +39,12 @@
           <button class="btn btn-danger">Delete</button>
         </form>
       </div>
+      <% } %>
       <div class="card-footer text-muted">2 Days Ago</div>
     </div>
   </div>
   <div class="col-6">
+    <% if (currentUser) { %>
     <h2 class="card-title">Leave a Review</h2>
     <div class="card-text">
       <form
@@ -73,17 +82,23 @@
         <button class="btn btn-success">Submit</button>
       </form>
     </div>
-
-    <% for(let review of bathroom.reviews) { %>
+    <% } else { %>
+    <h2>Reviews:</h2>
+    <%}%> <% for(let review of bathroom.reviews) { %>
     <div class="card mb-3">
       <div class="card-body">
         <h5 class="card-title">Rating: <%= review.rating %></h5>
-        <p class="card-text">Review: <%= review.body %></p>
+        <h6 class="card-subtitle mb-2 text-muted fst-italic">
+          By: <%= review.author.username %>
+        </h6>
+        <p class="card-text"><%= review.body %></p>
         <form
           action="/bathrooms/<%=bathroom._id%>/reviews/<%=review._id%>?_method=DELETE"
           method="POST"
         >
+          <% if (currentUser && review.author.equals(currentUser._id)) { %>
           <button class="btn btn-sm btn-danger">Delete</button>
+          <% } %>
         </form>
       </div>
     </div>

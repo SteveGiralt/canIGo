@@ -1,21 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
-const ExpressError = require("../utils/ExpressError");
 const Bathroom = require("../models/bathroom");
-const { bathroomSchema } = require("../schemas.js");
 const occupancies = ["Single", "Multi", "Family"];
-const { isLoggedIn } = require("../middleware");
-
-const validateBathroom = (req, res, next) => {
-  const { error } = bathroomSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-};
+const { isLoggedIn, validateBathroom, isAuthor } = require("../middleware");
 
 router.get(
   "/",
@@ -34,8 +22,8 @@ router.post(
   isLoggedIn,
   validateBathroom,
   catchAsync(async (req, res, next) => {
-    // if (!req.body.bathroom) throw new ExpressError('Invalid Bathroom Data', 400);
     const bathroom = new Bathroom(req.body.bathroom);
+    bathroom.author = req.user._id;
     await bathroom.save();
     req.flash("success", "Bathroom successfully added!");
     res.redirect(`/bathrooms/${bathroom._id}`);
@@ -45,7 +33,14 @@ router.post(
 router.get(
   "/:id",
   catchAsync(async (req, res) => {
-    const bathroom = await Bathroom.findById(req.params.id).populate("reviews");
+    const bathroom = await Bathroom.findById(req.params.id)
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "author",
+        },
+      })
+      .populate("author");
     if (!bathroom) {
       req.flash("error", "That bathroom wasn't found!");
       return res.redirect("/bathrooms");
@@ -57,6 +52,7 @@ router.get(
 router.get(
   "/:id/edit",
   isLoggedIn,
+  isAuthor,
   catchAsync(async (req, res) => {
     const bathroom = await Bathroom.findById(req.params.id);
     if (!bathroom) {
@@ -70,9 +66,11 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
+  isAuthor,
   validateBathroom,
   catchAsync(async (req, res) => {
     const { id } = req.params;
+
     const bathroom = await Bathroom.findByIdAndUpdate(id, {
       ...req.body.bathroom,
     });
@@ -84,6 +82,7 @@ router.put(
 router.delete(
   "/:id",
   isLoggedIn,
+  isAuthor,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     await Bathroom.findByIdAndDelete(id);
