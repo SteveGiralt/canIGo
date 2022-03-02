@@ -5,6 +5,7 @@ const ExpressError = require("../utils/ExpressError");
 const Bathroom = require("../models/bathroom");
 const { bathroomSchema } = require("../schemas.js");
 const occupancies = ["Single", "Multi", "Family"];
+const { isLoggedIn } = require("../middleware");
 
 const validateBathroom = (req, res, next) => {
   const { error } = bathroomSchema.validate(req.body);
@@ -24,12 +25,13 @@ router.get(
   })
 );
 
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
   res.render("bathrooms/new", { occupancies });
 });
 
 router.post(
   "/",
+  isLoggedIn,
   validateBathroom,
   catchAsync(async (req, res, next) => {
     // if (!req.body.bathroom) throw new ExpressError('Invalid Bathroom Data', 400);
@@ -54,6 +56,7 @@ router.get(
 
 router.get(
   "/:id/edit",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const bathroom = await Bathroom.findById(req.params.id);
     if (!bathroom) {
@@ -66,6 +69,7 @@ router.get(
 
 router.put(
   "/:id",
+  isLoggedIn,
   validateBathroom,
   catchAsync(async (req, res) => {
     const { id } = req.params;
@@ -79,6 +83,7 @@ router.put(
 
 router.delete(
   "/:id",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     await Bathroom.findByIdAndDelete(id);

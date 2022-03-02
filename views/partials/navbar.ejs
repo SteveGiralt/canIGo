@@ -18,6 +18,14 @@
         <a class="nav-link" href="/bathrooms">Bathrooms</a>
         <a class="nav-link" href="/bathrooms/new">Add A Bathroom</a>
       </div>
+      <div class="navbar-nav ms-auto">
+        <% if (!currentUser) { %>
+        <a href="/login" class="nav-link">Log In</a>
+        <a href="/register" class="nav-link">Sign Up</a>
+        <% } else { %>
+        <a href="/logout" class="nav-link">Log Out</a>
+        <% } %>
+      </div>
     </div>
   </div>
 </nav>
