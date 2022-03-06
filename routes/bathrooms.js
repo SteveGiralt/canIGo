@@ -8,14 +8,13 @@ const catchAsync = require("../utils/catchAsync");
 const { isLoggedIn, validateBathroom, isAuthor } = require("../middleware");
 const bathrooms = require("../controllers/bathrooms");
 
-router
-  .route("/")
-  .get(catchAsync(bathrooms.index))
-  // .post(isLoggedIn, validateBathroom, catchAsync(bathrooms.createBathroom));
-  .post(upload.array("image"), (req, res) => {
-    console.log(req.body, req.files);
-    res.send("Uploaded");
-  });
+router.route("/").get(catchAsync(bathrooms.index)).post(
+  isLoggedIn,
+  upload.array("image"),
+  validateBathroom,
+
+  catchAsync(bathrooms.createBathroom)
+);
 
 router.get("/new", isLoggedIn, bathrooms.renderNewForm);
 

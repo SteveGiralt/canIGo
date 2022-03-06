@@ -24,7 +24,20 @@ const seedDB = async () => {
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       occupancy: `${sample(occupancy)}`,
-      image: "https://source.unsplash.com/collection/93525116",
+      images: [
+        {
+          url: "https://res.cloudinary.com/canigo/image/upload/v1646605942/canIGo/pk4zzzkfcree5net4ulh.jpg",
+          filename: "canIGo/pk4zzzkfcree5net4ulh",
+        },
+        {
+          url: "https://res.cloudinary.com/canigo/image/upload/v1646605942/canIGo/aimxzcukd8rez2glru3l.jpg",
+          filename: "canIGo/aimxzcukd8rez2glru3l",
+        },
+        {
+          url: "https://res.cloudinary.com/canigo/image/upload/v1646605942/canIGo/yzbnsct2q3ls0qyrxlcv.jpg",
+          filename: "canIGo/yzbnsct2q3ls0qyrxlcv",
+        },
+      ],
       description:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe est aspernatur placeat itaque optio consectetur unde. Tempore repellendus a, iusto earum placeat aperiam! Facere quod voluptatum ea? Libero, sunt debitis!",
     });

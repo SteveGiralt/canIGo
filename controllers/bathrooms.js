@@ -13,8 +13,13 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.createBathroom = async (req, res, next) => {
   const bathroom = new Bathroom(req.body.bathroom);
+  bathroom.images = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  }));
   bathroom.author = req.user._id;
   await bathroom.save();
+  console.log(bathroom);
   req.flash("success", "Bathroom successfully added!");
   res.redirect(`/bathrooms/${bathroom._id}`);
 };

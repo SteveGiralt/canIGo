@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
 const sessionConfig = {
-  secret: "SECRET!",
+  secret: process.env.COOKIE_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -65,15 +65,6 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
-});
-
-app.get("/fakeUser", async (req, res) => {
-  const user = new User({
-    email: "bob@test.com",
-    username: "bobby",
-  });
-  const newuser = await User.register(user, "blahblah");
-  res.send(newuser);
 });
 
 app.use("/", userRoutes);

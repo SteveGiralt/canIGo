@@ -5,11 +5,9 @@
   <div class="col-sm-6 col-md-4 mb-3">
     <div class="card h-100">
       <img
-        src="<%= (bathroom.image ? bathroom.image :
-      '/images/no_toilet_img.jpg') %>"
-        class="card-img-top"
+        src="<%= bathroom.images[Math.floor(Math.random() * bathroom.images.length)].url %>"
+        class="card-img-top img-fluid"
         alt="Bathroom Image"
-        ;
       />
       <div class="card-body">
         <h5 class="card-title">
