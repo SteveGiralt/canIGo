@@ -2,6 +2,11 @@ const Bathroom = require("../models/bathroom");
 
 const occupancies = ["Single", "Multi", "Family"];
 
+const { cloudinary } = require("../cloudinary");
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
+
 module.exports.index = async (req, res) => {
   const bathrooms = await Bathroom.find({});
   res.render("bathrooms/index", { bathrooms });
@@ -12,7 +17,14 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.createBathroom = async (req, res, next) => {
+  const geoData = await geocoder
+    .forwardGeocode({
+      query: req.body.bathroom.location,
+      limit: 1,
+    })
+    .send();
   const bathroom = new Bathroom(req.body.bathroom);
+  bathroom.geometry = geoData.body.features[0].geometry;
   bathroom.images = req.files.map((f) => ({
     url: f.path,
     filename: f.filename,
@@ -55,6 +67,24 @@ module.exports.editBathroom = async (req, res) => {
   const bathroom = await Bathroom.findByIdAndUpdate(id, {
     ...req.body.bathroom,
   });
+  const imgs = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  }));
+  bathroom.images.push(...imgs);
+  await bathroom.save();
+  if (req.body.deleteImages) {
+    for (let filename of req.body.deleteImages) {
+      await cloudinary.uploader.destroy(filename);
+    }
+    await bathroom.updateOne({
+      $pull: {
+        images: {
+          filename: { $in: req.body.deleteImages },
+        },
+      },
+    });
+  }
   req.flash("success", "Bathroom updated!");
   res.redirect(`/bathrooms/${bathroom._id}`);
 };

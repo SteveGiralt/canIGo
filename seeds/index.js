@@ -21,6 +21,7 @@ const seedDB = async () => {
     const random1000 = Math.floor(Math.random() * 1000);
     const bath = new Bathroom({
       author: "621ee9394e1881a2f377465b",
+      geometry: { type: "Point", coordinates: [-147.7164, 64.8378] },
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       occupancy: `${sample(occupancy)}`,

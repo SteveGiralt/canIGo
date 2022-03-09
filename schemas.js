@@ -8,6 +8,7 @@ module.exports.bathroomSchema = Joi.object({
     description: Joi.string().required(),
     occupancy: Joi.string().required().valid("Single", "Multi", "Family"),
   }).required(),
+  deleteImages: Joi.array(),
 });
 
 module.exports.reviewSchema = Joi.object({

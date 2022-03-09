@@ -4,11 +4,19 @@
   <% for(let bathroom of bathrooms) { %>
   <div class="col-sm-6 col-md-4 mb-3">
     <div class="card h-100">
+      <% if (bathroom.images.length) { %>
       <img
         src="<%= bathroom.images[Math.floor(Math.random() * bathroom.images.length)].url %>"
         class="card-img-top img-fluid"
         alt="Bathroom Image"
       />
+      <% } else { %>
+      <img
+        src="/assets/no_toilet_img.jpg"
+        class="card-img-top img-fluid"
+        alt="Bathroom Image"
+      />
+      <% } %>
       <div class="card-body">
         <h5 class="card-title">
           <%= bathroom.title %>
@@ -19,6 +27,7 @@
           >View</a
         >
       </div>
+      <div class="card-footer text-muted"><%= bathroom.location %></div>
     </div>
   </div>
   <% } %>

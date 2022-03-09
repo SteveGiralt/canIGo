@@ -31,6 +31,7 @@ router
   .put(
     isLoggedIn,
     isAuthor,
+    upload.array("image"),
     validateBathroom,
     catchAsync(bathrooms.editBathroom)
   )
