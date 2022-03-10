@@ -11,33 +11,42 @@ ImageSchema.virtual("thumbnail").get(function () {
   return this.url.replace("/upload", "/upload/w_200");
 });
 
-const BathroomSchema = new Schema({
-  title: String,
-  occupancy: String,
-  description: String,
-  location: String,
-  images: [ImageSchema],
-  geometry: {
-    type: {
-      type: String,
-      enum: ["Point"],
-      required: true,
+const BathroomSchema = new Schema(
+  {
+    title: String,
+    occupancy: String,
+    description: String,
+    location: String,
+    images: [ImageSchema],
+    geometry: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        required: true,
+      },
+      coordinates: {
+        type: [Number],
+        required: true,
+      },
     },
-    coordinates: {
-      type: [Number],
-      required: true,
-    },
-  },
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-  reviews: [
-    {
+    author: {
       type: Schema.Types.ObjectId,
-      ref: "Review",
+      ref: "User",
     },
-  ],
+    reviews: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
+  },
+  { toJSON: { virtuals: true } }
+);
+
+BathroomSchema.virtual("properties.popUpMarkup").get(function () {
+  return `<strong><a href="/bathrooms/${
+    this._id
+  }">${this.title}</a></strong><p>${this.description.substring(0, 20)}...</p>`;
 });
 
 BathroomSchema.post("findOneAndDelete", async function (doc) {

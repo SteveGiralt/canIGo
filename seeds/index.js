@@ -17,11 +17,17 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async () => {
   await Bathroom.deleteMany({});
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 200; i++) {
     const random1000 = Math.floor(Math.random() * 1000);
     const bath = new Bathroom({
       author: "621ee9394e1881a2f377465b",
-      geometry: { type: "Point", coordinates: [-147.7164, 64.8378] },
+      geometry: {
+        type: "Point",
+        coordinates: [
+          cities[random1000].longitude,
+          cities[random1000].latitude,
+        ],
+      },
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       occupancy: `${sample(occupancy)}`,
