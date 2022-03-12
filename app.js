@@ -20,7 +20,7 @@ const bathroomRoutes = require("./routes/bathrooms");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/users");
 
-const databaseURL = process.env.DB_URL;
+const databaseURL = process.env.DB_URL || "mongodb://localhost:27017/canigo";
 
 const scriptSrcUrls = [
   "https://stackpath.bootstrapcdn.com/",
@@ -55,7 +55,7 @@ const fontSrcUrls = [
 //
 
 mongoose
-  .connect("mongodb://localhost:27017/canigo")
+  .connect(databaseURL)
   .then(() => {
     console.log("Mongo Connection Open...");
   })
@@ -79,13 +79,13 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: true,
   cookie: {
-    // secure: true,
+    secure: true,
     httpOnly: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
   store: MongoStore.create({
-    mongoUrl: "mongodb://localhost:27017/canigo",
+    mongoUrl: databaseURL,
     touchAfter: 24 * 3600,
   }),
 };
