@@ -22,6 +22,7 @@ const userRoutes = require("./routes/users");
 
 const databaseURL = process.env.DB_URL || "mongodb://localhost:27017/canigo";
 
+//
 const scriptSrcUrls = [
   "https://stackpath.bootstrapcdn.com/",
   "https://api.tiles.mapbox.com/",
@@ -79,7 +80,7 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: true,
+    secure: false,
     httpOnly: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
