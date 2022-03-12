@@ -6,7 +6,9 @@
       <h4 class="alert-heading">
         <%= err.message %> <i class="bi bi-emoji-frown"></i>
       </h4>
+      <% if (process.env.NODE_ENV !== "production") { %>
       <p><%= err.stack %></p>
+      <% } %>
     </div>
   </div>
 </div>

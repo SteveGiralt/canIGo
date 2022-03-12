@@ -81,10 +81,9 @@
     <div class="card mb-3">
       <div id="map"></div>
     </div>
-
+    <% if (currentUser) { %>
     <div class="card">
       <div class="card-body">
-        <% if (currentUser) { %>
         <h5 class="card-title">Leave a Review</h5>
         <div class="card-text">
           <form
@@ -151,17 +150,20 @@
             <button class="btn btn-success">Submit</button>
           </form>
         </div>
-        <% } else { %>
-        <h5 class="card-title">
-          <%= (bathroom.reviews.length ? "Reviews:" : "Be The First To Review!")
-          %>
-        </h5>
-        <%}%>
+        <% } else { %> <%}%>
       </div>
     </div>
   </div>
 
   <div class="container mt-4">
+    <div class="row">
+      <div class="col-12">
+        <h5 class="card-title text-center">
+          <%= (bathroom.reviews.length ? "Reviews:" : "Be The First To Review!")
+          %>
+        </h5>
+      </div>
+    </div>
     <div class="row align-items-center">
       <% for(let review of bathroom.reviews) { %>
       <div class="col-md-6 col-sm-12 mb-2">
@@ -187,12 +189,12 @@
       </div>
       <% } %>
     </div>
-  </div>
 
-  <script>
-    const mapToken = "<%- process.env.MAPBOX_TOKEN%>";
-    const bathroom = <%- JSON.stringify(bathroom) %>;
-    const coordinates = [<%- bathroom.geometry.coordinates %>];
-  </script>
-  <script src="/js/showPageMap.js"></script>
+    <script>
+      const mapToken = "<%- process.env.MAPBOX_TOKEN%>";
+      const bathroom = <%- JSON.stringify(bathroom) %>;
+      const coordinates = [<%- bathroom.geometry.coordinates %>];
+    </script>
+    <script src="/js/showPageMap.js"></script>
+  </div>
 </div>
